@@ -207,18 +207,69 @@ written instead of claiming success.
 
 ```console
 $ pytest -q
-49 passed
+58 passed
 ```
 
-The suite stubs the Anthropic client, so it needs no API key and costs nothing to run —
-that's what lets CI run it on every push across Python 3.10–3.13. It covers the mock
-org's Salesforce-like behaviour, the cadence policy's edges, the mode guarantee in all
-three modes, input validation, the audit trail, and the agent loop's wiring.
+The suite stubs the Anthropic client at the HTTP layer — not by faking the tool-runner
+loop, but by mocking the transport underneath it (`httpx2.MockTransport`) and running the
+*real* SDK against literal Messages API JSON. So it needs no API key and costs nothing to
+run, which is what lets CI run it on every push across Python 3.10–3.13, but it still
+exercises the actual boundary: real Pydantic response parsing, real dict-shaped tool
+dispatch through Pydantic validation, a malformed tool call becoming an `is_error` result
+instead of crashing the run, and `tool_use_id` correctly round-tripping through multi-turn
+history. It also covers the mock org's Salesforce-like behaviour, the cadence policy's
+edges, the mode guarantee in all three modes, input validation, the audit trail, and CLI
+argument parsing.
 
 What it deliberately does **not** test is the model's judgement. Asserting that Claude
 picks a particular follow-up for a particular deal would be an expensive, flaky test of
 something that legitimately varies. Evaluating output quality is a different exercise
-from testing the harness, and conflating them gets you a suite you stop trusting.
+from testing the harness, and conflating them gets you a suite you stop trusting — see
+the next section for how that question was actually checked.
+
+---
+
+## Verified against the live model
+
+Everything above confirms the harness is wired correctly. It says nothing about whether
+the model's actual decisions are any good, and no amount of mocking answers that — so
+this section is three real runs against `claude-opus-5`, on the fixture org, with real
+API calls. Full transcripts aren't reproduced here (they're long and non-deterministic
+between runs); this is what each was checking and what happened.
+
+**1. A full pipeline run in `auto` mode** — `sfagent run --mode auto`. Real writes landed:
+four opportunities got a task and a `NextStep` update, one was correctly left alone
+because an open task already covered the customer's request. Specific behaviour worth
+naming: it treated an opened-but-unanswered email as a reason to switch channel rather
+than send a third email on the same one, on three separate deals; it rewrote a `NextStep`
+that described what the *customer* owed rather than what the rep should do next; and on
+a $35k deal with no identified budget holder, it flagged the close date as unsupported by
+the record instead of quietly leaving a stale forecast in place.
+
+**2. The same org, run again in `auto` mode** — `sfagent --org runs/<run-1>/org-after.json
+run --mode auto` — feeding the first run's output back in, to check the concern named in
+Limitations below: would a second pass duplicate the first one's work? It didn't. Of five
+opportunities, it recognized all four just-created tasks as already the correct action and
+made zero duplicate writes, then found one *new*, legitimate issue the first pass hadn't
+caught — a `NextStep` on a fifth deal that named the wrong day for an already-booked
+commitment — and fixed only that. One clean pass isn't proof this never duplicates work
+under any conditions, but it's real evidence against the likeliest failure mode, on the
+exact scenario the concern describes.
+
+**3. `review` mode with every proposed write declined** — `yes n | sfagent run --mode
+review --opportunity <id>`, piping "no" to both approval prompts. Both writes were
+correctly held rather than committed, and — this is the part that only a live model can
+demonstrate — the model did not retry or route around the decline. It said so explicitly
+in its report, then named the operational risk the decline leaves in place (the deal
+stays out of cadence) rather than papering over it.
+
+One incidental finding from this round: `--org` originally only worked *before* the
+subcommand (`sfagent --org X run`) because of an argparse trap — a top-level flag and a
+subcommand flag sharing one `dest` write into the same `Namespace`, and the subcommand's
+own default silently wins if the flag isn't also passed there. Typing it the more natural
+way, after the subcommand, failed with `unrecognized arguments`. Fixed by attaching `--org`
+to each subcommand via a shared parent parser instead of the top-level one; pinned in
+[`tests/test_cli.py`](tests/test_cli.py).
 
 ---
 
@@ -289,9 +340,15 @@ resembling production, and run in `suggest` mode until you trust what it propose
 - **No eval harness.** There are no measured numbers on the quality of the agent's
   follow-up decisions, and this README doesn't claim any. That's the obvious next thing
   to build: a labelled set of deals with expected actions, scored per run.
-- **No dedupe against prior runs.** Within a run the agent sees the tasks it created;
-  across runs it relies on `get_opportunity_detail` surfacing open tasks. Two `auto`
-  runs an hour apart could plausibly schedule overlapping work.
+- **No enforced dedupe against prior runs — it relies on the model reading before it
+  writes.** There is no code-level lock stopping two `auto` runs from double-booking the
+  same deal; the only defence is `get_opportunity_detail` surfacing open tasks and the
+  model choosing not to duplicate one it sees. In the one back-to-back test run so far
+  (see "Verified against the live model" above) it held: a second `auto` pass recognized
+  all four tasks the first pass had just created and added zero duplicates. That is
+  encouraging, not proof — it is a property of the model's judgement in one scenario, not
+  a guarantee the harness enforces, and a stricter deployment would want a real lock
+  (e.g. an idempotency key derived from the opportunity and the SLA window it's covering).
 - **Single owner.** The fixture has one AE and the tools don't filter by owner, so
   multi-rep pipelines would need `owner_id` threading through the tool surface.
 

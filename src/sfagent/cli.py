@@ -201,7 +201,17 @@ def build_parser() -> argparse.ArgumentParser:
         prog="sfagent",
         description="An agent that keeps Salesforce activity records and follow-up cadence honest.",
     )
-    parser.add_argument(
+
+    # `--org` is defined once and shared via `parents=`, then attached to each
+    # subcommand rather than the top-level parser. argparse subparsers write
+    # into the same Namespace as the top-level parser, so a top-level and a
+    # subcommand argument sharing one `dest` silently clobber each other -
+    # the subcommand's default wins whenever it isn't passed there, even if
+    # the user passed it before the subcommand name. Attaching it only to the
+    # subcommands sidesteps that trap and matches where a user naturally
+    # types it: `sfagent run --org custom.json`, not before `run`.
+    org_arg = argparse.ArgumentParser(add_help=False)
+    org_arg.add_argument(
         "--org",
         type=Path,
         default=Path("data/org.json"),
@@ -210,11 +220,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub = parser.add_subparsers(dest="command", required=True)
 
-    inspect = sub.add_parser("inspect", help="Show the org and cadence status. No API calls.")
+    inspect = sub.add_parser(
+        "inspect", parents=[org_arg], help="Show the org and cadence status. No API calls."
+    )
     inspect.add_argument("--opportunity", help="Also print this opportunity's activity timeline.")
     inspect.set_defaults(func=cmd_inspect)
 
-    run = sub.add_parser("run", help="Run the agent over the pipeline.")
+    run = sub.add_parser("run", parents=[org_arg], help="Run the agent over the pipeline.")
     run.add_argument(
         "--mode",
         choices=MODES,
