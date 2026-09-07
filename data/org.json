@@ -1,0 +1,227 @@
+{
+  "_comment": "Seed state for the in-memory Salesforce org. Dates are stored as relative offsets so the fixture never goes stale: `days_ago` for things that happened, `days_from_now` for things that are scheduled. crm/mock.py materialises them into ISO dates at load time.",
+
+  "users": [
+    { "Id": "0055g00000AbCdEAAV", "Name": "Harry Dance", "Email": "harry@meridiandata.example", "Title": "Account Executive" }
+  ],
+
+  "accounts": [
+    { "Id": "0015g00000NwLg1AAF", "Name": "Northwind Logistics", "Industry": "Transportation", "NumberOfEmployees": 2400, "BillingCity": "Rotterdam" },
+    { "Id": "0015g00000NwLg2AAF", "Name": "Calderwood Health", "Industry": "Healthcare", "NumberOfEmployees": 8100, "BillingCity": "Boston" },
+    { "Id": "0015g00000NwLg3AAF", "Name": "Tessellate Software", "Industry": "Technology", "NumberOfEmployees": 310, "BillingCity": "Austin" },
+    { "Id": "0015g00000NwLg4AAF", "Name": "Bellweather Retail Group", "Industry": "Retail", "NumberOfEmployees": 15200, "BillingCity": "Leeds" },
+    { "Id": "0015g00000NwLg5AAF", "Name": "Fenwick Manufacturing", "Industry": "Industrial", "NumberOfEmployees": 940, "BillingCity": "Sheffield" },
+    { "Id": "0015g00000NwLg6AAF", "Name": "Arcadia Financial", "Industry": "Financial Services", "NumberOfEmployees": 5600, "BillingCity": "London" }
+  ],
+
+  "contacts": [
+    { "Id": "0035g00000PqR01AAF", "AccountId": "0015g00000NwLg1AAF", "Name": "Marit de Vries", "Title": "VP Operations", "Email": "m.devries@northwind.example", "Phone": "+31 10 555 0142", "Role": "Economic Buyer" },
+    { "Id": "0035g00000PqR02AAF", "AccountId": "0015g00000NwLg1AAF", "Name": "Tomas Bakker", "Title": "Head of Fleet Analytics", "Email": "t.bakker@northwind.example", "Phone": "+31 10 555 0177", "Role": "Champion" },
+
+    { "Id": "0035g00000PqR03AAF", "AccountId": "0015g00000NwLg2AAF", "Name": "Dr. Alicia Moreno", "Title": "Chief Medical Information Officer", "Email": "a.moreno@calderwood.example", "Phone": "+1 617 555 0198", "Role": "Economic Buyer" },
+    { "Id": "0035g00000PqR04AAF", "AccountId": "0015g00000NwLg2AAF", "Name": "Ravi Chandran", "Title": "Director of Clinical Systems", "Email": "r.chandran@calderwood.example", "Phone": "+1 617 555 0121", "Role": "Champion" },
+
+    { "Id": "0035g00000PqR05AAF", "AccountId": "0015g00000NwLg3AAF", "Name": "Jenna Okafor", "Title": "VP Engineering", "Email": "jenna@tessellate.example", "Phone": "+1 512 555 0163", "Role": "Champion" },
+
+    { "Id": "0035g00000PqR06AAF", "AccountId": "0015g00000NwLg4AAF", "Name": "Colin Prentice", "Title": "Group Finance Director", "Email": "c.prentice@bellweather.example", "Phone": "+44 113 555 0110", "Role": "Economic Buyer" },
+    { "Id": "0035g00000PqR07AAF", "AccountId": "0015g00000NwLg4AAF", "Name": "Susannah Kaur", "Title": "Head of Store Systems", "Email": "s.kaur@bellweather.example", "Phone": "+44 113 555 0134", "Role": "Champion" },
+    { "Id": "0035g00000PqR08AAF", "AccountId": "0015g00000NwLg4AAF", "Name": "Peter Lindqvist", "Title": "Procurement Lead", "Email": "p.lindqvist@bellweather.example", "Phone": "+44 113 555 0159", "Role": "Blocker" },
+
+    { "Id": "0035g00000PqR09AAF", "AccountId": "0015g00000NwLg5AAF", "Name": "Denise Whitlock", "Title": "Plant Operations Manager", "Email": "d.whitlock@fenwick.example", "Phone": "+44 114 555 0188", "Role": "User" },
+
+    { "Id": "0035g00000PqR10AAF", "AccountId": "0015g00000NwLg6AAF", "Name": "Idris Haddad", "Title": "Head of Data Platform", "Email": "i.haddad@arcadiafin.example", "Phone": "+44 20 555 0102", "Role": "Champion" }
+  ],
+
+  "opportunities": [
+    {
+      "Id": "0065g00000XyZ01AAF",
+      "Name": "Northwind Logistics - Fleet Analytics Platform",
+      "AccountId": "0015g00000NwLg1AAF",
+      "OwnerId": "0055g00000AbCdEAAV",
+      "StageName": "Negotiation/Review",
+      "Amount": 185000,
+      "Probability": 75,
+      "CloseDate": { "days_from_now": 8 },
+      "NextStep": "Legal to return redlines on MSA",
+      "Type": "New Business",
+      "LeadSource": "Partner Referral",
+      "Description": "Redlines were promised on the 10th and have not arrived. Procurement is quiet."
+    },
+    {
+      "Id": "0065g00000XyZ02AAF",
+      "Name": "Calderwood Health - Clinical Data Warehouse",
+      "AccountId": "0015g00000NwLg2AAF",
+      "OwnerId": "0055g00000AbCdEAAV",
+      "StageName": "Proposal/Price Quote",
+      "Amount": 420000,
+      "Probability": 60,
+      "CloseDate": { "days_from_now": 34 },
+      "NextStep": "",
+      "Type": "New Business",
+      "LeadSource": "Conference",
+      "Description": "Pricing sent. Champion enthusiastic; economic buyer has not engaged directly since the exec briefing."
+    },
+    {
+      "Id": "0065g00000XyZ03AAF",
+      "Name": "Tessellate Software - Platform Expansion",
+      "AccountId": "0015g00000NwLg3AAF",
+      "OwnerId": "0055g00000AbCdEAAV",
+      "StageName": "Value Proposition",
+      "Amount": 64000,
+      "Probability": 40,
+      "CloseDate": { "days_from_now": 21 },
+      "NextStep": "Send security questionnaire responses by Friday",
+      "Type": "Existing Business - Upgrade",
+      "LeadSource": "Existing Customer",
+      "Description": "Healthy, active cycle. Demo landed well two days ago."
+    },
+    {
+      "Id": "0065g00000XyZ04AAF",
+      "Name": "Bellweather Retail Group - Store Systems Rollout",
+      "AccountId": "0015g00000NwLg4AAF",
+      "OwnerId": "0055g00000AbCdEAAV",
+      "StageName": "Needs Analysis",
+      "Amount": 780000,
+      "Probability": 30,
+      "CloseDate": { "days_from_now": 76 },
+      "NextStep": "",
+      "Type": "New Business",
+      "LeadSource": "Outbound",
+      "Description": "Large, slow, multi-stakeholder. Procurement lead has raised objections about incumbent contract."
+    },
+    {
+      "Id": "0065g00000XyZ05AAF",
+      "Name": "Fenwick Manufacturing - Predictive Maintenance Pilot",
+      "AccountId": "0015g00000NwLg5AAF",
+      "OwnerId": "0055g00000AbCdEAAV",
+      "StageName": "Qualification",
+      "Amount": 35000,
+      "Probability": 20,
+      "CloseDate": { "days_from_now": 12 },
+      "NextStep": "",
+      "Type": "New Business",
+      "LeadSource": "Inbound Web",
+      "Description": "Only contact is an end user with no budget authority. Went quiet after the first call."
+    },
+    {
+      "Id": "0065g00000XyZ06AAF",
+      "Name": "Arcadia Financial - Data Platform Migration",
+      "AccountId": "0015g00000NwLg6AAF",
+      "OwnerId": "0055g00000AbCdEAAV",
+      "StageName": "Closed Won",
+      "Amount": 260000,
+      "Probability": 100,
+      "CloseDate": { "days_ago": 14 },
+      "NextStep": "",
+      "Type": "New Business",
+      "LeadSource": "Outbound",
+      "Description": "Signed. Handover to delivery complete."
+    }
+  ],
+
+  "tasks": [
+    {
+      "Id": "00T5g00000Ta001AAF", "WhatId": "0065g00000XyZ01AAF", "WhoId": "0035g00000PqR01AAF",
+      "Subject": "Call - commercial terms walkthrough", "Type": "Call", "Status": "Completed",
+      "Priority": "Normal", "ActivityDate": { "days_ago": 13 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Walked Marit through the 3-year term. She agreed to the shape of the deal and said legal would return redlines within a week."
+    },
+    {
+      "Id": "00T5g00000Ta002AAF", "WhatId": "0065g00000XyZ01AAF", "WhoId": "0035g00000PqR02AAF",
+      "Subject": "Email - sent MSA for redline", "Type": "Email", "Status": "Completed",
+      "Priority": "Normal", "ActivityDate": { "days_ago": 12 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Sent the MSA and the security addendum to Tomas to route internally."
+    },
+
+    {
+      "Id": "00T5g00000Ta010AAF", "WhatId": "0065g00000XyZ02AAF", "WhoId": "0035g00000PqR03AAF",
+      "Subject": "Meeting - executive briefing", "Type": "Meeting", "Status": "Completed",
+      "Priority": "High", "ActivityDate": { "days_ago": 26 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Dr. Moreno attended for 30 of 60 minutes. Asked two questions about HIPAA audit logging, then dropped off. Ravi covered the rest."
+    },
+    {
+      "Id": "00T5g00000Ta011AAF", "WhatId": "0065g00000XyZ02AAF", "WhoId": "0035g00000PqR04AAF",
+      "Subject": "Call - scoping the pilot cohort", "Type": "Call", "Status": "Completed",
+      "Priority": "Normal", "ActivityDate": { "days_ago": 15 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Ravi confirmed two service lines for the pilot. Flagged that Alicia signs anything over $250k and prefers a written business case over meetings."
+    },
+    {
+      "Id": "00T5g00000Ta012AAF", "WhatId": "0065g00000XyZ02AAF", "WhoId": "0035g00000PqR04AAF",
+      "Subject": "Email - sent pricing proposal", "Type": "Email", "Status": "Completed",
+      "Priority": "Normal", "ActivityDate": { "days_ago": 9 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Sent the 3-year proposal at $420k with the pilot credit applied."
+    },
+
+    {
+      "Id": "00T5g00000Ta020AAF", "WhatId": "0065g00000XyZ03AAF", "WhoId": "0035g00000PqR05AAF",
+      "Subject": "Call - expansion discovery", "Type": "Call", "Status": "Completed",
+      "Priority": "Normal", "ActivityDate": { "days_ago": 9 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Jenna wants to add the streaming connector for two more teams. Budget already approved internally."
+    },
+    {
+      "Id": "00T5g00000Ta021AAF", "WhatId": "0065g00000XyZ03AAF", "WhoId": "0035g00000PqR05AAF",
+      "Subject": "Follow up on security questionnaire", "Type": "Other", "Status": "Not Started",
+      "Priority": "Normal", "ActivityDate": { "days_from_now": 3 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Return completed questionnaire to Jenna's security reviewer."
+    },
+
+    {
+      "Id": "00T5g00000Ta030AAF", "WhatId": "0065g00000XyZ04AAF", "WhoId": "0035g00000PqR07AAF",
+      "Subject": "Meeting - store systems discovery", "Type": "Meeting", "Status": "Completed",
+      "Priority": "Normal", "ActivityDate": { "days_ago": 21 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Susannah walked through the current till estate. 1,100 stores, incumbent contract expires in 14 months."
+    },
+    {
+      "Id": "00T5g00000Ta031AAF", "WhatId": "0065g00000XyZ04AAF", "WhoId": "0035g00000PqR08AAF",
+      "Subject": "Call - procurement intro", "Type": "Call", "Status": "Completed",
+      "Priority": "Normal", "ActivityDate": { "days_ago": 11 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Peter was blunt: no appetite to run a competitive process before the incumbent renewal window opens. Wants a written comparison if we want to be considered early."
+    },
+
+    {
+      "Id": "00T5g00000Ta040AAF", "WhatId": "0065g00000XyZ05AAF", "WhoId": "0035g00000PqR09AAF",
+      "Subject": "Call - inbound qualification", "Type": "Call", "Status": "Completed",
+      "Priority": "Low", "ActivityDate": { "days_ago": 24 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Denise downloaded the maintenance whitepaper. Interested but has no budget and could not name who owns it."
+    },
+
+    {
+      "Id": "00T5g00000Ta050AAF", "WhatId": "0065g00000XyZ06AAF", "WhoId": "0035g00000PqR10AAF",
+      "Subject": "Email - countersigned order form", "Type": "Email", "Status": "Completed",
+      "Priority": "High", "ActivityDate": { "days_ago": 14 }, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Fully executed. Delivery kickoff booked."
+    }
+  ],
+
+  "events": [
+    {
+      "Id": "00U5g00000Ev001AAF", "WhatId": "0065g00000XyZ03AAF", "WhoId": "0035g00000PqR05AAF",
+      "Subject": "Technical demo - streaming connector", "StartDateTime": { "days_ago": 2 },
+      "DurationInMinutes": 45, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "Demoed the connector to Jenna and two staff engineers. Strong reception; one open question on exactly-once delivery."
+    },
+    {
+      "Id": "00U5g00000Ev002AAF", "WhatId": "0065g00000XyZ04AAF", "WhoId": "0035g00000PqR06AAF",
+      "Subject": "Intro call - Group Finance", "StartDateTime": { "days_from_now": 5 },
+      "DurationInMinutes": 30, "OwnerId": "0055g00000AbCdEAAV",
+      "Description": "First conversation with Colin Prentice. Booked by Susannah."
+    }
+  ],
+
+  "email_messages": [
+    { "Id": "02s5g00000Em001AAF", "RelatedToId": "0065g00000XyZ01AAF", "ContactId": "0035g00000PqR02AAF", "Subject": "MSA + security addendum", "MessageDate": { "days_ago": 12 }, "Incoming": false, "IsOpened": true, "Snippet": "Attaching both documents for your legal team." },
+    { "Id": "02s5g00000Em002AAF", "RelatedToId": "0065g00000XyZ01AAF", "ContactId": "0035g00000PqR02AAF", "Subject": "Re: MSA + security addendum", "MessageDate": { "days_ago": 11 }, "Incoming": true, "IsOpened": true, "Snippet": "Got it, with legal now. Should have comments back to you next week." },
+    { "Id": "02s5g00000Em003AAF", "RelatedToId": "0065g00000XyZ01AAF", "ContactId": "0035g00000PqR02AAF", "Subject": "Checking in on redlines", "MessageDate": { "days_ago": 4 }, "Incoming": false, "IsOpened": true, "Snippet": "Any word from legal? Happy to jump on a call to speed things up." },
+
+    { "Id": "02s5g00000Em010AAF", "RelatedToId": "0065g00000XyZ02AAF", "ContactId": "0035g00000PqR04AAF", "Subject": "Proposal - Clinical Data Warehouse", "MessageDate": { "days_ago": 9 }, "Incoming": false, "IsOpened": true, "Snippet": "Pricing and the pilot credit are on page 4." },
+    { "Id": "02s5g00000Em011AAF", "RelatedToId": "0065g00000XyZ02AAF", "ContactId": "0035g00000PqR04AAF", "Subject": "Re: Proposal - Clinical Data Warehouse", "MessageDate": { "days_ago": 8 }, "Incoming": true, "IsOpened": true, "Snippet": "This looks workable to me. I need to get Alicia to actually read it - she is buried in the Epic upgrade until month end." },
+    { "Id": "02s5g00000Em012AAF", "RelatedToId": "0065g00000XyZ02AAF", "ContactId": "0035g00000PqR03AAF", "Subject": "Business case summary - 2 pages", "MessageDate": { "days_ago": 6 }, "Incoming": false, "IsOpened": false, "Snippet": "Condensed the proposal into a two-page business case for your review." },
+
+    { "Id": "02s5g00000Em020AAF", "RelatedToId": "0065g00000XyZ03AAF", "ContactId": "0035g00000PqR05AAF", "Subject": "Re: Demo follow-up", "MessageDate": { "days_ago": 1 }, "Incoming": true, "IsOpened": true, "Snippet": "Team loved it. Send the questionnaire responses and I will start the paperwork." },
+
+    { "Id": "02s5g00000Em030AAF", "RelatedToId": "0065g00000XyZ04AAF", "ContactId": "0035g00000PqR07AAF", "Subject": "Store estate data request", "MessageDate": { "days_ago": 7 }, "Incoming": false, "IsOpened": true, "Snippet": "Could you share the till refresh schedule?" },
+
+    { "Id": "02s5g00000Em040AAF", "RelatedToId": "0065g00000XyZ05AAF", "ContactId": "0035g00000PqR09AAF", "Subject": "Following up on our call", "MessageDate": { "days_ago": 18 }, "Incoming": false, "IsOpened": false, "Snippet": "Wanted to see if you had a chance to find out who owns the maintenance budget." },
+    { "Id": "02s5g00000Em041AAF", "RelatedToId": "0065g00000XyZ05AAF", "ContactId": "0035g00000PqR09AAF", "Subject": "Re: Following up on our call", "MessageDate": { "days_ago": 11 }, "Incoming": false, "IsOpened": false, "Snippet": "Second nudge - still keen to help if there is an internal sponsor we should be talking to." }
+  ]
+}

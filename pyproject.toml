@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sfagent"
+version = "0.1.0"
+description = "An AI agent that automates Salesforce activity logging and follow-up scheduling"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Harry Dance" }]
+keywords = ["salesforce", "crm", "agent", "claude", "sales-operations"]
+
+dependencies = [
+    "anthropic>=0.69",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+# Install with `pip install -e ".[salesforce]"` to enable the live-org client.
+salesforce = ["simple-salesforce>=1.12"]
+
+[project.scripts]
+sfagent = "sfagent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

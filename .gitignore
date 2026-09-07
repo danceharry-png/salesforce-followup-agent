@@ -1,0 +1,18 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Run artifacts: audit trails, results, and post-run org snapshots.
+runs/
+
+.env
+.DS_Store
+.idea/
+.vscode/
